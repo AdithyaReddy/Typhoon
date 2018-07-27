@@ -25,3 +25,14 @@
 - (void)useInitializer:(SEL)selector __attribute((unavailable("Initializer of TyphoonFactoryDefinition cannot be changed")));
 
 @end
+
+
+
+@interface UCTyphoonDefinition: TyphoonDefinition
+
+@property (nonatomic, strong) id classOrProtocolForAutoInjection;
+
+@end
+
+
+

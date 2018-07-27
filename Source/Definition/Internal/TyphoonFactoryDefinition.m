@@ -99,3 +99,51 @@
 }
 
 @end
+
+
+@implementation UCTyphoonDefinition
+{
+    id <TyphoonInjection> _factoryInjection;
+};
+
+- (BOOL)isCandidateForInjectedClass:(Class)clazz includeSubclasses:(BOOL)includeSubclasses
+{
+    BOOL result = NO;
+    if (self.autoInjectionVisibility & TyphoonAutoInjectVisibilityByClass) {
+        BOOL isSameClass = self.classOrProtocolForAutoInjection == clazz;
+        BOOL isSubclass = includeSubclasses && [self.classOrProtocolForAutoInjection isSubclassOfClass:clazz];
+        result = isSameClass || isSubclass;
+    }
+    return result;
+}
+
+- (BOOL)isCandidateForInjectedProtocol:(Protocol *)aProtocol
+{
+    Class componentClass = IsClass(self.classOrProtocolForAutoInjection) ? self.classOrProtocolForAutoInjection : nil;
+    Protocol *componentProtocol = IsProtocol(self.classOrProtocolForAutoInjection) ? self.classOrProtocolForAutoInjection : nil;
+    
+    BOOL result = NO;
+    
+    if (self.autoInjectionVisibility & TyphoonAutoInjectVisibilityByProtocol) {
+        if (componentClass) {
+            result = [componentClass conformsToProtocol:aProtocol];
+        } else if (componentProtocol) {
+            result = componentProtocol == aProtocol;
+        }
+    }
+    return result;
+}
+
+#pragma mark - NSCopying
+
+- (id)copyWithZone:(NSZone *)zone
+{
+    UCTyphoonDefinition *copy = [super copyWithZone:zone];
+    copy->_classOrProtocolForAutoInjection = _classOrProtocolForAutoInjection;
+    copy->_factoryInjection = [_factoryInjection copyWithZone:zone];
+    return copy;
+}
+
+
+@end
+
