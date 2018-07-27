@@ -101,6 +101,10 @@
 @end
 
 
+/*
+ Custom class to support component-resolution by Type
+ */
+
 @implementation UCTyphoonDefinition
 {
     id <TyphoonInjection> _factoryInjection;
